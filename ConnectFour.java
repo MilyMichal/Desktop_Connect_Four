@@ -8,6 +8,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class ConnectFour extends JFrame {
+    int xCount = 0;
+    int oCount = 0;
 
     public ConnectFour() {
         setTitle("Connect Four");
@@ -30,6 +32,17 @@ public class ConnectFour extends JFrame {
             for (char j = 'A'; j < 'H'; j++) {
                 JButton button = new JButton(" ");
                 button.setFocusPainted(false);
+                button.addActionListener(e -> {
+                    if (e.getActionCommand().equals(" ")) {
+                        if (xCount == oCount) {
+                            button.setText("X");
+                            xCount++;
+                        } else if (xCount > oCount) {
+                            button.setText("O");
+                            oCount++;
+                        }
+                    }
+                });
                 button.setName(String.format("Button%s%d", j, i));
                 buttonContainer.add(button).setFont(font);
             }
@@ -38,14 +51,16 @@ public class ConnectFour extends JFrame {
         add(buttonContainer);
     }
 }
+
 //confirmation window for closing application
 class CheckOnExit extends WindowAdapter {
-    public void windowClosing (WindowEvent e) {
+    public void windowClosing(WindowEvent e) {
         ClosingWindow checker = new ClosingWindow();
         checker.setVisible(true);
     }
 
 }
+
 class ClosingWindow extends JFrame implements ActionListener {
     public ClosingWindow() {
         setSize(250, 100);
@@ -53,7 +68,7 @@ class ClosingWindow extends JFrame implements ActionListener {
         setLayout(new BorderLayout());
 
         JLabel confirmLabel = new JLabel("Are you sure you want to quit?", SwingConstants.CENTER);
-        add(confirmLabel,BorderLayout.CENTER);
+        add(confirmLabel, BorderLayout.CENTER);
 
         JPanel buttonPannel = new JPanel();
         buttonPannel.setLayout(new FlowLayout());
@@ -66,8 +81,9 @@ class ClosingWindow extends JFrame implements ActionListener {
         cancelButton.addActionListener(this);
         buttonPannel.add(cancelButton);
 
-        add(buttonPannel,BorderLayout.SOUTH);
+        add(buttonPannel, BorderLayout.SOUTH);
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
