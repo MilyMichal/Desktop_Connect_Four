@@ -1,13 +1,20 @@
 package four;
 
 import javax.swing.*;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+//main app window
 public class ConnectFour extends JFrame {
+    //graphic
+    Color bgColour = new Color(240,244,194);
+    Color lightGreen = new Color(174, 213, 130);
+    Color mediumGreen = new Color(156,204 , 102);
+    Font font = new Font(Font.SANS_SERIF, Font.BOLD, 18);
     int xCount = 0;
     int oCount = 0;
 
@@ -24,13 +31,22 @@ public class ConnectFour extends JFrame {
     }
 
     public void initButtons() {
-        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 18);
+
+        // Button grid
         JPanel buttonContainer = new JPanel();
         buttonContainer.setSize(400, 400);
-        buttonContainer.setLayout(new GridLayout(6, 7));
+        buttonContainer.setBackground(bgColour);
+        buttonContainer.setLayout(new GridLayout(6, 7,3,3));
+
+        // buttons spawn
         for (int i = 6; i > 0; i--) {
             for (char j = 'A'; j < 'H'; j++) {
                 JButton button = new JButton(" ");
+                if ((i + j) % 2 == 0 ) {
+                    button.setBackground(lightGreen);
+                } else {
+                    button.setBackground(mediumGreen);
+                }
                 button.setFocusPainted(false);
                 button.addActionListener(e -> {
                     if (e.getActionCommand().equals(" ")) {
