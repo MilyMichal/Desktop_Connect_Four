@@ -1,6 +1,7 @@
 package four;
 
 import javax.swing.*;
+import javax.swing.plaf.ButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,20 +40,25 @@ public class ConnectFour extends JFrame {
     }
 
     public void initButtons() {
+        // buttons grid
         JPanel buttonContainer = new JPanel();
         buttonContainer.setLayout(new GridLayout(NUMBER_OF_ROWS,NUMBER_OF_COLUMS,3,3));
 
+        // space for reset button
         JPanel bottom = new JPanel();
         add(bottom,BorderLayout.SOUTH);
 
+        // reset button settings
         JButton resetButton = new JButton();
         resetButton.setSize(200,100);
-        resetButton.setText("RESET");
         resetButton.setBackground(new Color(255,255,0));
+        resetButton.setText("RESET");
+        resetButton.addActionListener(e -> resetAllButtons(gameField));
         resetButton.setFont(resetFont);
         bottom.add(resetButton,BorderLayout.CENTER);
 
-        //button settings
+
+        //cell button settings
         for (int i = NUMBER_OF_ROWS; i > 0; i--) {
             position = 0;
             for (char j = 'A'; j < 'H'; j++) {
@@ -75,6 +81,7 @@ public class ConnectFour extends JFrame {
                         if (gameField[k][colNum].getText().equals(" ")) {
                             if (xCount == oCount) {
                                 gameField[k][colNum].setText("X");
+                                //gameField[k][colNum].setBackground(Color.cyan);
                                 xCount++;
                                 break;
                             } else if (xCount > oCount) {
@@ -92,13 +99,25 @@ public class ConnectFour extends JFrame {
                 } else {
                     button.setBackground(mediumGreen);
                 }
-
+                ButtonUI bg = button.getUI();
                 //adding complete button
                 buttonContainer.add(button).setFont(cellFont);
                 position++;
             }
         }
         add(buttonContainer);
+    }
+
+    private void resetAllButtons(JButton[][] gameField) {
+
+        xCount = 0;
+        oCount = 0;
+
+        for (JButton[] row : gameField) {
+            for (JButton button : row) {
+                button.setText(" ");
+            }
+        }
     }
 }
 
