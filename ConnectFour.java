@@ -21,7 +21,9 @@ public class ConnectFour extends JFrame {
     //UX
     Color lightGreen = new Color(174, 213, 130);
     Color mediumGreen = new Color(156, 204, 102);
-    Font font = new Font(Font.SANS_SERIF, Font.BOLD, 32);
+    Font cellFont = new Font(Font.SANS_SERIF, Font.BOLD, 32);
+    Font resetFont = new Font(Font.SANS_SERIF, Font.BOLD, 16);
+
 
 
     //UI
@@ -30,7 +32,6 @@ public class ConnectFour extends JFrame {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(450, 450);
         setResizable(false);
-        setLayout(new GridLayout(NUMBER_OF_ROWS, NUMBER_OF_COLUMS, 3, 3));
         setLocationRelativeTo(null);
         initButtons();
         addWindowListener(new CheckOnExit());
@@ -38,6 +39,18 @@ public class ConnectFour extends JFrame {
     }
 
     public void initButtons() {
+        JPanel buttonContainer = new JPanel();
+        buttonContainer.setLayout(new GridLayout(NUMBER_OF_ROWS,NUMBER_OF_COLUMS,3,3));
+
+        JPanel bottom = new JPanel();
+        add(bottom,BorderLayout.SOUTH);
+
+        JButton resetButton = new JButton();
+        resetButton.setSize(200,100);
+        resetButton.setText("RESET");
+        resetButton.setBackground(new Color(255,255,0));
+        resetButton.setFont(resetFont);
+        bottom.add(resetButton,BorderLayout.CENTER);
 
         //button settings
         for (int i = NUMBER_OF_ROWS; i > 0; i--) {
@@ -81,12 +94,14 @@ public class ConnectFour extends JFrame {
                 }
 
                 //adding complete button
-                add(button).setFont(font);
+                buttonContainer.add(button).setFont(cellFont);
                 position++;
             }
         }
+        add(buttonContainer);
     }
 }
+
 
 //confirmation window for closing application
 class CheckOnExit extends WindowAdapter {
