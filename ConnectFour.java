@@ -1,29 +1,36 @@
 package four;
 
 import javax.swing.*;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-//main app window
 public class ConnectFour extends JFrame {
-    //graphic
-    Color bgColour = new Color(240,244,194);
-    Color lightGreen = new Color(174, 213, 130);
-    Color mediumGreen = new Color(156,204 , 102);
-    Font font = new Font(Font.SANS_SERIF, Font.BOLD, 18);
+    // game tracking fields
+
+    private final int NUMBER_OF_ROWS = 6;
+    private final int NUMBER_OF_COLUMS = 7;
+    JButton[][] gameField = new JButton[NUMBER_OF_ROWS][NUMBER_OF_COLUMS];
     int xCount = 0;
     int oCount = 0;
+    int position;
 
+
+    //UX
+    Color lightGreen = new Color(174, 213, 130);
+    Color mediumGreen = new Color(156, 204, 102);
+    Font font = new Font(Font.SANS_SERIF, Font.BOLD, 32);
+
+
+    //UI
     public ConnectFour() {
         setTitle("Connect Four");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(450, 450);
         setResizable(false);
-        setLayout(new BorderLayout());
+        setLayout(new GridLayout(NUMBER_OF_ROWS, NUMBER_OF_COLUMS, 3, 3));
         setLocationRelativeTo(null);
         initButtons();
         addWindowListener(new CheckOnExit());
@@ -32,39 +39,52 @@ public class ConnectFour extends JFrame {
 
     public void initButtons() {
 
-        // Button grid
-        JPanel buttonContainer = new JPanel();
-        buttonContainer.setSize(400, 400);
-        buttonContainer.setBackground(bgColour);
-        buttonContainer.setLayout(new GridLayout(6, 7,3,3));
-
-        // buttons spawn
-        for (int i = 6; i > 0; i--) {
+        //button settings
+        for (int i = NUMBER_OF_ROWS; i > 0; i--) {
+            position = 0;
             for (char j = 'A'; j < 'H'; j++) {
                 JButton button = new JButton(" ");
-                if ((i + j) % 2 == 0 ) {
+                button.setName(String.format("Button%s%d", j, i));
+                button.setFocusPainted(false);
+                gameField[NUMBER_OF_ROWS - i][position] = button;
+                button.addActionListener(e -> {
+                    JButton clickedButton = (JButton) e.getSource();
+                    int colNum = 0;
+                    for (JButton[] jButtons : gameField) {
+                        for (int y = 0; y < jButtons.length; y++) {
+                            if (jButtons[y].getName().equals(clickedButton.getName())) {
+                                colNum = y;
+                            }
+                        }
+                    }
+                    //filling of cell
+                    for (int k = NUMBER_OF_ROWS - 1; k >= 0; k--) {
+                        if (gameField[k][colNum].getText().equals(" ")) {
+                            if (xCount == oCount) {
+                                gameField[k][colNum].setText("X");
+                                xCount++;
+                                break;
+                            } else if (xCount > oCount) {
+                                gameField[k][colNum].setText("O");
+                                oCount++;
+                                break;
+                            }
+                        }
+                    }
+                });
+
+                //button color settings
+                if ((i + j) % 2 == 0) {
                     button.setBackground(lightGreen);
                 } else {
                     button.setBackground(mediumGreen);
                 }
-                button.setFocusPainted(false);
-                button.addActionListener(e -> {
-                    if (e.getActionCommand().equals(" ")) {
-                        if (xCount == oCount) {
-                            button.setText("X");
-                            xCount++;
-                        } else if (xCount > oCount) {
-                            button.setText("O");
-                            oCount++;
-                        }
-                    }
-                });
-                button.setName(String.format("Button%s%d", j, i));
-                buttonContainer.add(button).setFont(font);
+
+                //adding complete button
+                add(button).setFont(font);
+                position++;
             }
         }
-        setVisible(true);
-        add(buttonContainer);
     }
 }
 
@@ -74,9 +94,9 @@ class CheckOnExit extends WindowAdapter {
         ClosingWindow checker = new ClosingWindow();
         checker.setVisible(true);
     }
-
 }
 
+//confirmation window for closing application
 class ClosingWindow extends JFrame implements ActionListener {
     public ClosingWindow() {
         setSize(250, 100);
@@ -86,18 +106,20 @@ class ClosingWindow extends JFrame implements ActionListener {
         JLabel confirmLabel = new JLabel("Are you sure you want to quit?", SwingConstants.CENTER);
         add(confirmLabel, BorderLayout.CENTER);
 
-        JPanel buttonPannel = new JPanel();
-        buttonPannel.setLayout(new FlowLayout());
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout());
 
         JButton confirmButton = new JButton("Yes");
         confirmButton.addActionListener(this);
-        buttonPannel.add(confirmButton);
+        confirmButton.setFocusPainted(false);
+        buttonPanel.add(confirmButton);
 
         JButton cancelButton = new JButton("No");
         cancelButton.addActionListener(this);
-        buttonPannel.add(cancelButton);
+        cancelButton.setFocusPainted(false);
+        buttonPanel.add(cancelButton);
 
-        add(buttonPannel, BorderLayout.SOUTH);
+        add(buttonPanel, BorderLayout.SOUTH);
     }
 
     @Override
