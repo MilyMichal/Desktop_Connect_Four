@@ -26,7 +26,6 @@ public class ConnectFour extends JFrame {
     Font resetFont = new Font(Font.SANS_SERIF, Font.BOLD, 16);
 
 
-
     //UI
     public ConnectFour() {
         setTitle("Connect Four");
@@ -42,20 +41,20 @@ public class ConnectFour extends JFrame {
     public void initButtons() {
         // buttons grid
         JPanel buttonContainer = new JPanel();
-        buttonContainer.setLayout(new GridLayout(NUMBER_OF_ROWS,NUMBER_OF_COLUMS,3,3));
+        buttonContainer.setLayout(new GridLayout(NUMBER_OF_ROWS, NUMBER_OF_COLUMS, 3, 3));
 
         // space for reset button
         JPanel bottom = new JPanel();
-        add(bottom,BorderLayout.SOUTH);
+        add(bottom, BorderLayout.SOUTH);
 
         // reset button settings
         JButton resetButton = new JButton();
-        resetButton.setSize(200,100);
-        resetButton.setBackground(new Color(255,255,0));
+        resetButton.setSize(200, 100);
+        resetButton.setBackground(new Color(255, 255, 0));
         resetButton.setText("RESET");
         resetButton.addActionListener(e -> resetAllButtons(gameField));
         resetButton.setFont(resetFont);
-        bottom.add(resetButton,BorderLayout.CENTER);
+        bottom.add(resetButton, BorderLayout.CENTER);
 
 
         //cell button settings
@@ -86,6 +85,7 @@ public class ConnectFour extends JFrame {
                                 break;
                             } else if (xCount > oCount) {
                                 gameField[k][colNum].setText("O");
+                                //gameField[k][colNum].setBackground(Color.cyan);
                                 oCount++;
                                 break;
                             }
@@ -99,7 +99,7 @@ public class ConnectFour extends JFrame {
                 } else {
                     button.setBackground(mediumGreen);
                 }
-                ButtonUI bg = button.getUI();
+
                 //adding complete button
                 buttonContainer.add(button).setFont(cellFont);
                 position++;
@@ -113,14 +113,18 @@ public class ConnectFour extends JFrame {
         xCount = 0;
         oCount = 0;
 
-        for (JButton[] row : gameField) {
-            for (JButton button : row) {
-                button.setText(" ");
+        for (int m = 0; m < gameField.length; m++) {
+            for (int n = 0; n < gameField[m].length; n++) {
+                gameField[m][n].setText(" ");
+                if ((m + n) % 2 == 0) {
+                    gameField[m][n].setBackground(mediumGreen);
+                } else {
+                    gameField[m][n].setBackground(lightGreen);
+                }
             }
         }
     }
 }
-
 
 //confirmation window for closing application
 class CheckOnExit extends WindowAdapter {
