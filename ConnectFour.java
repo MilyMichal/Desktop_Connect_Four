@@ -8,25 +8,23 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class ConnectFour extends JFrame {
-    // game tracking fields
+    // game tracking stuff
 
     private final int NUMBER_OF_ROWS = 6;
     private final int NUMBER_OF_COLUMS = 7;
     JButton[][] gameField = new JButton[NUMBER_OF_ROWS][NUMBER_OF_COLUMS];
-    int xCount = 0;
-    int oCount = 0;
+    String player = "X";
     int position;
 
     StateChecker referee = new StateChecker();
 
-    //UX
+    //UX settings
     Color lightGreen = new Color(174, 213, 130);
-    Color mediumGreen = new Color(156, 204, 102);
     Font cellFont = new Font(Font.SANS_SERIF, Font.BOLD, 32);
     Font resetFont = new Font(Font.SANS_SERIF, Font.BOLD, 16);
 
 
-    //UI
+    //UI components
     public ConnectFour() {
         setTitle("Connect Four");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -79,31 +77,18 @@ public class ConnectFour extends JFrame {
                     //filling of cell
                     for (int k = NUMBER_OF_ROWS - 1; k >= 0; k--) {
                         if (gameField[k][colNum].getText().equals(" ")) {
-                            if (xCount == oCount) {
-                                gameField[k][colNum].setText("X");
-                                referee.checkFourInRow(gameField,"X");
-                                referee.checkFourInColum(colNum,"X",gameField);
-                                referee.diagonalCheck(gameField,"X");
-                                xCount++;
-                                break;
-                            } else if (xCount > oCount) {
-                                gameField[k][colNum].setText("O");
-                                referee.checkFourInRow(gameField,"O");
-                                referee.checkFourInColum(colNum,"O",gameField);
-                                referee.diagonalCheck(gameField,"O");
-                                oCount++;
-                                break;
-                            }
+                            gameField[k][colNum].setText(player);
+                            referee.checkFourInRow(gameField, player);
+                            referee.checkFourInColum(colNum, player, gameField);
+                            referee.diagonalCheck(gameField, player);
+                            switchPlayer();
+                            break;
                         }
                     }
                 });
 
                 //button color settings
-                //if ((i + j) % 2 == 0) {
-                    button.setBackground(lightGreen);
-               // } else {
-                   // button.setBackground(mediumGreen);
-               // }
+                button.setBackground(lightGreen);
 
                 //adding complete button
                 buttonContainer.add(button).setFont(cellFont);
@@ -114,22 +99,17 @@ public class ConnectFour extends JFrame {
     }
 
     private void resetAllButtons(JButton[][] gameField) {
-
-        xCount = 0;
-        oCount = 0;
-
-        for (int m = 0; m < gameField.length; m++) {
-            for (int n = 0; n < gameField[m].length; n++) {
-                gameField[m][n].setText(" ");
-                gameField[m][n].setEnabled(true);
-                gameField[m][n].setBackground(lightGreen);
-               /* if ((m + n) % 2 == 0) {
-                    gameField[m][n].setBackground(mediumGreen);
-                } else {
-                    gameField[m][n].setBackground(lightGreen);
-                }*/
+        player = "X";
+        for (JButton[] row : gameField) {
+            for (JButton button : row) {
+                button.setText(" ");
+                button.setBackground(lightGreen);
+                button.setEnabled(true);
             }
         }
+    }
+    private void switchPlayer() {
+        player = player.equals("X") ? "O" : "X";
     }
 }
 
