@@ -1,7 +1,6 @@
 package four;
 
 import javax.swing.*;
-import javax.swing.plaf.ButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +17,7 @@ public class ConnectFour extends JFrame {
     int oCount = 0;
     int position;
 
+    StateChecker referee = new StateChecker();
 
     //UX
     Color lightGreen = new Color(174, 213, 130);
@@ -49,6 +49,7 @@ public class ConnectFour extends JFrame {
 
         // reset button settings
         JButton resetButton = new JButton();
+        resetButton.setName("ButtonReset");
         resetButton.setSize(200, 100);
         resetButton.setBackground(new Color(255, 255, 0));
         resetButton.setText("RESET");
@@ -80,12 +81,16 @@ public class ConnectFour extends JFrame {
                         if (gameField[k][colNum].getText().equals(" ")) {
                             if (xCount == oCount) {
                                 gameField[k][colNum].setText("X");
-                                //gameField[k][colNum].setBackground(Color.cyan);
+                                referee.checkFourInRow(gameField,"X");
+                                referee.checkFourInColum(colNum,"X",gameField);
+                                referee.diagonalCheck(gameField,"X");
                                 xCount++;
                                 break;
                             } else if (xCount > oCount) {
                                 gameField[k][colNum].setText("O");
-                                //gameField[k][colNum].setBackground(Color.cyan);
+                                referee.checkFourInRow(gameField,"O");
+                                referee.checkFourInColum(colNum,"O",gameField);
+                                referee.diagonalCheck(gameField,"O");
                                 oCount++;
                                 break;
                             }
@@ -94,11 +99,11 @@ public class ConnectFour extends JFrame {
                 });
 
                 //button color settings
-                if ((i + j) % 2 == 0) {
+                //if ((i + j) % 2 == 0) {
                     button.setBackground(lightGreen);
-                } else {
-                    button.setBackground(mediumGreen);
-                }
+               // } else {
+                   // button.setBackground(mediumGreen);
+               // }
 
                 //adding complete button
                 buttonContainer.add(button).setFont(cellFont);
@@ -116,11 +121,13 @@ public class ConnectFour extends JFrame {
         for (int m = 0; m < gameField.length; m++) {
             for (int n = 0; n < gameField[m].length; n++) {
                 gameField[m][n].setText(" ");
-                if ((m + n) % 2 == 0) {
+                gameField[m][n].setEnabled(true);
+                gameField[m][n].setBackground(lightGreen);
+               /* if ((m + n) % 2 == 0) {
                     gameField[m][n].setBackground(mediumGreen);
                 } else {
                     gameField[m][n].setBackground(lightGreen);
-                }
+                }*/
             }
         }
     }
